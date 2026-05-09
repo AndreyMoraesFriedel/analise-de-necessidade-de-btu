@@ -1,6 +1,6 @@
 #include "Pessoa.h"
 
-namespace pessoas {
+namespace ambiente {
 
     Pessoa::Pessoa(double calor) {
         this->calorGerado = calor;

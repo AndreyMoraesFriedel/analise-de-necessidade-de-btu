@@ -1,7 +1,7 @@
 #ifndef CALCULADORA_BTU_H
 #define CALCULADORA_BTU_H
 
-namespace simulacao {
+namespace calculos {
 
     class CalculadoraBTU {
         public:

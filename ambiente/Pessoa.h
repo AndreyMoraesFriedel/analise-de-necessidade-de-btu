@@ -5,7 +5,7 @@
 //caminho de arquivo e libs
 #include "../energia/GeradorCalor.h"
 
-namespace pessoas {
+namespace ambiente {
 
     //Pessoa esta herdando/implementando a interface GeradorCalor
     class Pessoa : public energia::GeradorCalor {

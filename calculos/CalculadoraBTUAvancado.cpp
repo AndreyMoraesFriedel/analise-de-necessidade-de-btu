@@ -1,11 +1,10 @@
 #include "CalculadoraBTUAvancado.h"
 #include "../ambiente/Ambiente.h"
-namespace simulacao {
+namespace calculos {
 
     double CalculadoraBTUAvancado::calcular(const ambiente::Ambiente& amb) {
-
         double btus = 0;
-        btus += amb.getTamanho() * 600;
+        btus += amb.calcularArea() * 600;
         btus += amb.calcularCalorInterno();
         for (const auto& j : amb.getJanelas()) {
             if (j.temSol())

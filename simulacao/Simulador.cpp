@@ -1,40 +1,55 @@
 #include <iostream>
-
+#include <string>
 #include "Simulador.h"
-#include "CalculadoraBTU.h"
-#include "CalculadoraBTUAvancado.h"
-#include "EntradaDados.h"
+
+#include "../calculos/CalculadoraBTU.h"
+#include "../calculos/CalculadoraBTUAvancado.h"
+
+#include "../entrada/EntradaConsole.h"
+#include "../entrada/EntradaArquivo.h"
 
 #include "../ambiente/Ambiente.h"
-#include "../pessoas/Pessoa.h"
+#include "../ambiente/Pessoa.h"
+#include "../ambiente/Janela.h"
+
 #include "../equipamentos/Televisao.h"
 #include "../equipamentos/Computador.h"
 #include "../equipamentos/Luz.h"
 
+using namespace entrada;
 using namespace simulacao;
 using namespace ambiente;
-using namespace pessoas;
 using namespace equipamentos;
 using namespace std;
 
+Simulador::Simulador() {
+    entrada = nullptr;
+}
+
 void Simulador::executar() {
+    escolherTipoEntrada();
     int opcao;
     do {
         mostrarMenu();
         cin >> opcao;
         executarOpcao(opcao);
     } while (opcao != 0);
+    delete entrada;
 }
 
 void Simulador::mostrarMenu() {
-    cout << "\n===== SIMULADOR AR CONDICIONADO =====\n";
-    cout << "1 - Calcular BTU (Simples)\n";
-    cout << "2 - Calcular BTU (Avancado - POO)\n";
-    cout << "0 - Sair\n";
+    cout << "\n===== SIMULADOR AR CONDICIONADO =====" << endl;
+    cout << "1 - Calcular BTU (Simples)" << endl;
+    cout << "2 - Calcular BTU (Avancado - POO)" << endl;
+    cout << "0 - Sair" << endl;
     cout << "Escolha uma opcao: ";
 }
 
 void Simulador::executarOpcao(int opcao) {
+    EntradaArquivo* ea = dynamic_cast<EntradaArquivo*>(entrada);
+    if (ea != nullptr) {
+        ea->reiniciar();
+    }
     switch (opcao) {
         case 1:
             executarBTUSimples();
@@ -50,33 +65,72 @@ void Simulador::executarOpcao(int opcao) {
     }
 }
 
+void Simulador::escolherTipoEntrada() {
+    int opcao;
+    cout << "===== TIPO DE ENTRADA =====" << endl;
+    cout << "1 - Console" << endl;
+    cout << "2 - Arquivo" << endl;
+    cout << "Escolha: ";
+    cin >> opcao;
+    if (opcao == 1) {
+        entrada = new EntradaConsole();
+    } else {
+        string nomeArquivo;
+        cout << "Nome do arquivo: ";
+        cin >> nomeArquivo;
+        entrada = new EntradaArquivo(
+            nomeArquivo.c_str()
+        );
+    }
+}
+
 void Simulador::executarBTUSimples() {
-    double area = EntradaDados::lerArea();
-    int pessoas = EntradaDados::lerPessoas();
-    int eletronicos = EntradaDados::lerEletronicos();
-    bool sol = EntradaDados::lerSolDireto();
-    double resultado = CalculadoraBTU::calcular(area, pessoas-1, eletronicos, sol);
+    double largura = entrada->lerLargura();
+    double comprimento = entrada->lerComprimento();
+    double area = largura * comprimento;
+    int pessoas = entrada->lerPessoas();
+    int eletronicos = entrada->lerEletronicos();
+    bool sol = entrada->lerSolDireto();
+    double resultado = calculos::CalculadoraBTU::calcular(
+        area,
+        pessoas - 1,
+        eletronicos,
+        sol
+    );
     cout << "\nBTU (Simples): " << resultado << endl;
 }
 
 void Simulador::executarBTUAvancado() {
-    double tempAtual = EntradaDados::lerTemperaturaAtual();
-    double tempExterna = EntradaDados::lerTemperaturaExterna();
-    double tamanho = EntradaDados::lerArea();
-    Ambiente amb(tempAtual, tempExterna, tamanho);
+    double tempAtual = entrada->lerTemperaturaAtual();
+    double tempExterna = entrada->lerTemperaturaExterna();
+    double largura = entrada->lerLargura();
+    double comprimento = entrada->lerComprimento();
+    double altura = entrada->lerAltura();
+    Ambiente amb(
+        tempAtual,
+        tempExterna,
+        largura,
+        comprimento,
+        altura
+    );
     // Pessoas
-    int numPessoas = EntradaDados::lerPessoas();
-    for (int i = 0; i < numPessoas; i++)
+    int numPessoas = entrada->lerPessoas();
+    for (int i = 0; i < numPessoas; i++) {
         amb.adicionarPessoa(Pessoa());
+    }
     // TVs
-    int numTV = EntradaDados::lerQuantidade("Quantidade de TVs: ");
+    int numTV = entrada->lerQuantidade(
+        "Quantidade de TVs: "
+    );
     for (int i = 0; i < numTV; i++) {
         auto* tv = new Televisao();
         tv->ligar();
         amb.adicionarAparelho(tv);
     }
-    // PCs
-    int numPC = EntradaDados::lerQuantidade("Quantidade de computadores: ");
+    // Computadores
+    int numPC = entrada->lerQuantidade(
+        "Quantidade de computadores: "
+    );
     for (int i = 0; i < numPC; i++) {
         auto* pc = new Computador();
         pc->ligar();
@@ -86,9 +140,11 @@ void Simulador::executarBTUAvancado() {
     Luz luz(100);
     luz.ligar();
     amb.adicionarLuz(luz);
-    // Sol
-    bool sol = EntradaDados::lerSolDireto();
-    amb.adicionarJanela(Janela(false, sol));
-    double resultado = CalculadoraBTUAvancado::calcular(amb);
+    // Sol direto
+    bool sol = entrada->lerSolDireto();
+    amb.adicionarJanela(
+        Janela(false, sol)
+    );
+    double resultado = calculos::CalculadoraBTUAvancado::calcular(amb);
     cout << "\nBTU (Avancado): " << resultado << endl;
 }

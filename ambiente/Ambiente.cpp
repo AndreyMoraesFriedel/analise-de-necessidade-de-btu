@@ -2,12 +2,19 @@
 
 namespace ambiente {
 
-    Ambiente::Ambiente(double tempAtual, double tempExterna, double tamanho) {
-        this->temperaturaAtual = tempAtual;
-        this->temperaturaExterna = tempExterna;
-        this->tamanho = tamanho;
+    Ambiente::Ambiente(
+        double temperaturaAtual,
+        double temperaturaExterna,
+        double largura,
+        double comprimento,
+        double altura
+    ) {
+        this->temperaturaAtual = temperaturaAtual;
+        this->temperaturaExterna = temperaturaExterna;
+        this->largura = largura;
+        this->comprimento = comprimento;
+        this->altura = altura;
     }
-
     double Ambiente::getTemperatura() const {
         return temperaturaAtual;
     }
@@ -16,7 +23,7 @@ namespace ambiente {
         temperaturaAtual = t;
     }
 
-    void Ambiente::adicionarPessoa(const pessoas::Pessoa& p) {
+    void Ambiente::adicionarPessoa(const Pessoa& p) {
         pessoas.push_back(p);
     }
 
@@ -38,7 +45,6 @@ namespace ambiente {
 
     double Ambiente::calcularCalorInterno() const {
         double total = 0;
-
         for (const auto& p : pessoas)
             total += p.gerarCalor();
 
@@ -47,12 +53,11 @@ namespace ambiente {
 
         for (const auto& l : luzes)
             total += l.gerarCalor();
-
         return total;
     }
 
-    double Ambiente::getTamanho() const {
-        return tamanho;
+    double Ambiente::calcularArea() const {
+        return largura * comprimento;
     }
 
     double Ambiente::getTemperaturaExterna() const {
@@ -61,6 +66,10 @@ namespace ambiente {
 
     const std::vector<Janela>& Ambiente::getJanelas() const {
         return janelas;
+    }
+
+    double Ambiente::calcularVolume() const {
+        return largura * comprimento * altura;
     }
 
 }

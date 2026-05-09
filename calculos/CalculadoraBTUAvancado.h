@@ -3,7 +3,7 @@
 
 #include "../ambiente/Ambiente.h"
 
-namespace simulacao {
+namespace calculos {
 
     class CalculadoraBTUAvancado {
         public:

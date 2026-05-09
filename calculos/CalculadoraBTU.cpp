@@ -1,6 +1,6 @@
 #include "CalculadoraBTU.h"
 
-namespace simulacao {
+namespace calculos {
 
     double CalculadoraBTU::calcular(
         double area,
