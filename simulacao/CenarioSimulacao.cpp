@@ -8,6 +8,7 @@ namespace simulacao {
         int pessoas,
         int televisoes,
         int computadores,
+        int celulares,
         bool solDireto
     ) {
         this->largura = largura;
@@ -15,6 +16,7 @@ namespace simulacao {
         this->pessoas = pessoas;
         this->televisoes = televisoes;
         this->computadores = computadores;
+        this->celulares = celulares,
         this->solDireto = solDireto;
     }
 
@@ -37,6 +39,10 @@ namespace simulacao {
 
     int CenarioSimulacao::getComputadores() const {
         return computadores;
+    }
+
+    int CenarioSimulacao::getCelulares() const {
+        return celulares;
     }
 
     bool CenarioSimulacao::getSolDireto() const {

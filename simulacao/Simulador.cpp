@@ -12,7 +12,7 @@
 
 #include "../equipamentos/Televisao.h"
 #include "../equipamentos/Computador.h"
-
+#include "../equipamentos/Celular.h"
 #include <vector>
 
 using namespace ambiente;
@@ -45,6 +45,12 @@ namespace simulacao {
                 auto* pc = new Computador();
                 pc->ligar();
                 amb.adicionarAparelho(pc);
+            }
+            //celulares
+            for (int i = 0;i < cenario.getCelulares();i++) {
+                auto* cl = new Celular();
+                cl->ligar();
+                amb.adicionarAparelho(cl);
             }
             double resultado = calculos::CalculadoraBTU::calcular(amb);
             resultados.push_back(ResultadoSimulacao(id,resultado));

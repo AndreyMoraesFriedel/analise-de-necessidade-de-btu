@@ -37,7 +37,7 @@ namespace entrada {
             while (getline(ss, campo, ';')) {
                 campos.push_back(campo);
             }
-            if (campos.size() != 6) {
+            if (campos.size() != 7) {
                 cout << "Linha invalida: " << linha << endl;
                 continue;
             }
@@ -47,7 +47,8 @@ namespace entrada {
                 stoi(campos[2]),
                 stoi(campos[3]),
                 stoi(campos[4]),
-                stoi(campos[5])
+                stoi(campos[5]),
+                stoi(campos[6])
             );
             cenarios.push_back(c);
         }

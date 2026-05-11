@@ -13,6 +13,7 @@ namespace simulacao {
         int pessoas;
         int televisoes;
         int computadores;
+        int celulares;
         bool solDireto;
     public:
         CenarioSimulacao(
@@ -21,6 +22,7 @@ namespace simulacao {
             int pessoas,
             int televisoes,
             int computadores,
+            int celulares,
             bool solDireto
         );
         double getLargura() const;
@@ -28,6 +30,7 @@ namespace simulacao {
         int getPessoas() const;
         int getTelevisoes() const;
         int getComputadores() const;
+        int getCelulares() const;
         bool getSolDireto() const;
     };
 
