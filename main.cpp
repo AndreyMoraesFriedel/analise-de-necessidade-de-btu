@@ -2,6 +2,9 @@
 
 int main() {
     simulacao::Simulador s;
-    s.executar();
+    s.executar(
+        "entrada.csv",
+        "saida.csv"
+    );
     return 0;
 }
