@@ -1,25 +1,23 @@
 #include "LeitorCSV.h"
-#include <iostream>
+
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 using namespace simulacao;
 
-bool linhaVazia(const string& s) {
-
-    for (char c : s) {
-        if (!isspace(c)) {
-            return false;
-        }
-    }
-    return true;
-}
-
 namespace entrada {
+    bool linhaVazia(const string& s) {
+        for (char c : s) {
+            if (!isspace(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-    vector<CenarioSimulacao>
-    LeitorCSV::ler(const string& caminho) {
+    vector<CenarioSimulacao> LeitorCSV::ler(const string& caminho) {
         vector<CenarioSimulacao> cenarios;
         ifstream arquivo(caminho);
         if (!arquivo.is_open()) {
@@ -27,7 +25,7 @@ namespace entrada {
             return cenarios;
         }
         string linha;
-        //Ignora cabeçalho
+        //Ignorar cabeçalho
         getline(arquivo, linha);
         while (getline(arquivo, linha)) {
             if (linhaVazia(linha)) {
@@ -39,21 +37,17 @@ namespace entrada {
             while (getline(ss, campo, ';')) {
                 campos.push_back(campo);
             }
-            if (campos.size() != 10) {
+            if (campos.size() != 6) {
                 cout << "Linha invalida: " << linha << endl;
                 continue;
             }
             CenarioSimulacao c(
-                campos[0],
+                stod(campos[0]),
                 stod(campos[1]),
-                stod(campos[2]),
-                stod(campos[3]),
-                stod(campos[4]),
-                stod(campos[5]),
-                stoi(campos[6]),
-                stoi(campos[7]),
-                stoi(campos[8]),
-                stoi(campos[9])
+                stoi(campos[2]),
+                stoi(campos[3]),
+                stoi(campos[4]),
+                stoi(campos[5])
             );
             cenarios.push_back(c);
         }

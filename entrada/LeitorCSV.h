@@ -11,6 +11,7 @@ namespace entrada {
     class LeitorCSV {
 
     public:
+
         static std::vector<simulacao::CenarioSimulacao>
         ler(const std::string& caminho);
     };

@@ -2,92 +2,55 @@
 
 #include "../entrada/LeitorCSV.h"
 
-#include "../calculos/CalculadoraBTU.h"
-#include "../calculos/CalculadoraBTUAvancado.h"
+#include "../simulacao/ResultadoSimulacao.h"
+#include "../simulacao/EscritorResultado.h"
 
-#include "ResultadoSimulacao.h"
-#include "EscritorResultado.h"
+#include "../calculos/CalculadoraBTU.h"
 
 #include "../ambiente/Ambiente.h"
 #include "../ambiente/Pessoa.h"
-#include "../ambiente/Janela.h"
 
 #include "../equipamentos/Televisao.h"
 #include "../equipamentos/Computador.h"
-#include "../equipamentos/Luz.h"
 
 #include <vector>
 
-using namespace simulacao;
 using namespace ambiente;
 using namespace equipamentos;
-using namespace std;
 
 namespace simulacao {
 
-void Simulador::executar(
-    const string& entradaCSV,
-    const string& saidaCSV
-) {
-    auto cenarios = entrada::LeitorCSV::ler(entradaCSV);
-    vector<ResultadoSimulacao> resultados;
-    int id = 1;
-    for (const auto& cenario : cenarios) {
-        double resultado = 0;
-        //Simples
-        if (cenario.getTipo() == "simples") {
-            double area = cenario.getLargura() * cenario.getComprimento();
-            resultado = calculos::CalculadoraBTU::calcular(
-                area,
-                cenario.getPessoas() - 1,
-                cenario.getTelevisoes(),
-                cenario.getSolDireto()
-            );
-        }
-        //Avancado
-        else if (cenario.getTipo() =="avancado") {
+    void Simulador::executar(const std::string& entradaCSV, const std::string& saidaCSV) {
+        auto cenarios = entrada::LeitorCSV::ler(entradaCSV);
+        std::vector<ResultadoSimulacao> resultados;
+        int id = 1;
+        for (const auto& cenario : cenarios) {
             Ambiente amb(
-                cenario.getTemperaturaAtual(),
-                cenario.getTemperaturaExterna(),
                 cenario.getLargura(),
                 cenario.getComprimento(),
-                cenario.getAltura()
+                cenario.getSolDireto()
             );
-            // Pessoas
-            for (int i = 0;i < cenario.getPessoas();i++) {
-                amb.adicionarPessoa(
-                    Pessoa()
-                );
+            //Pessoas
+            for (int i = 0; i < cenario.getPessoas(); i++) {
+                amb.adicionarPessoa(new Pessoa());
             }
-            // TVs
+            //TVs
             for (int i = 0;i < cenario.getTelevisoes();i++) {
                 auto* tv = new Televisao();
                 tv->ligar();
                 amb.adicionarAparelho(tv);
             }
-            // PCs
-            for(int i = 0;i < cenario.getComputadores();i++) {
+            //PCs
+            for (int i = 0;i < cenario.getComputadores();i++) {
                 auto* pc = new Computador();
                 pc->ligar();
                 amb.adicionarAparelho(pc);
             }
-            // Luz
-            Luz luz(100);
-            luz.ligar();
-            amb.adicionarLuz(luz);
-            // Sol
-            amb.adicionarJanela(
-                Janela(
-                    false,
-                    cenario.getSolDireto()
-                )
-            );
-            resultado =calculos::CalculadoraBTUAvancado::calcular(amb);
+            double resultado = calculos::CalculadoraBTU::calcular(amb);
+            resultados.push_back(ResultadoSimulacao(id,resultado));
+            id++;
         }
-        resultados.push_back(ResultadoSimulacao(id,cenario.getTipo(),resultado));
-        id++;
+        EscritorResultado::escrever(saidaCSV,resultados);
     }
-    EscritorResultado::escrever(saidaCSV,resultados);
-}
 
 }

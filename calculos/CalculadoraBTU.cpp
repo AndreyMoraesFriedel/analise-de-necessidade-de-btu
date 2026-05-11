@@ -2,17 +2,14 @@
 
 namespace calculos {
 
-    double CalculadoraBTU::calcular(
-        double area,
-        int pessoasExtras,
-        int eletronicos,
-        bool solDireto
-    ) {
+    double CalculadoraBTU::calcular(const ambiente::Ambiente& amb){
         double btus = 0;
-        btus += area * 600;
-        btus += pessoasExtras * 600;
-        btus += eletronicos * 600;
-        if (solDireto)
+        btus += amb.calcularArea() * 600;
+        if(amb.getPessoas().size()>1){
+            btus += amb.getPessoas().size() * 600;
+        }
+        btus += amb.getAparelhos().size() * 600;
+        if (amb.isSolDireto())
             btus += 1000;
         return btus;
     }

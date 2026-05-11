@@ -6,11 +6,11 @@ using namespace std;
 
 namespace simulacao {
 
-    void EscritorResultado::escrever(const string& caminho,const vector<ResultadoSimulacao>& resultados) {
+    void EscritorResultado::escrever( const string& caminho, const vector<ResultadoSimulacao>& resultados) {
         ofstream arquivo(caminho);
-        arquivo << "id;tipo;btu" << endl;
+        arquivo << "id;btu\n";
         for (const auto& r : resultados) {
-            arquivo << r.getId() << ";" << r.getTipo() << ";" << r.getBTU() << endl;
+            arquivo << r.getId() << ";" << r.getBTU() << endl;
         }
         arquivo.close();
     }
