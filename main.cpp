@@ -1,10 +1,12 @@
 #include "simulacao/Simulador.h"
 
 int main() {
+
     simulacao::Simulador s;
+
     s.executar(
-        "entrada.csv",
-        "saida.csv"
+        "entrada.csv"
     );
+
     return 0;
 }

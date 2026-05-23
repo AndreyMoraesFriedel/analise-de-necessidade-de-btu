@@ -9,8 +9,7 @@ namespace simulacao {
 
     public:
         void executar(
-            const std::string& entradaCSV,
-            const std::string& saidaCSV
+            const std::string& entradaCSV
         );
     };
 

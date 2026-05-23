@@ -2,8 +2,9 @@
 
 namespace simulacao {
 
-    ResultadoSimulacao::ResultadoSimulacao(int id,double btu) {
-        this->id = id;
+    ResultadoSimulacao::ResultadoSimulacao() {}
+
+    ResultadoSimulacao::ResultadoSimulacao(double btu) {
         this->btu = btu;
     }
 
