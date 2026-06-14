@@ -106,6 +106,41 @@ namespace odb
       long long id_value;
       bool id_null;
 
+      // largura
+      //
+      double largura_value;
+      bool largura_null;
+
+      // comprimento
+      //
+      double comprimento_value;
+      bool comprimento_null;
+
+      // pessoas
+      //
+      long long pessoas_value;
+      bool pessoas_null;
+
+      // televisoes
+      //
+      long long televisoes_value;
+      bool televisoes_null;
+
+      // computadores
+      //
+      long long computadores_value;
+      bool computadores_null;
+
+      // celulares
+      //
+      long long celulares_value;
+      bool celulares_null;
+
+      // solDireto
+      //
+      long long solDireto_value;
+      bool solDireto_null;
+
       // btu
       //
       double btu_value;
@@ -148,7 +183,7 @@ namespace odb
 
     typedef sqlite::object_statements<object_type> statements_type;
 
-    static const std::size_t column_count = 2UL;
+    static const std::size_t column_count = 9UL;
     static const std::size_t id_column_count = 1UL;
     static const std::size_t inverse_column_count = 0UL;
     static const std::size_t readonly_column_count = 0UL;

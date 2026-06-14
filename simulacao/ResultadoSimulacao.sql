@@ -6,5 +6,12 @@ DROP TABLE IF EXISTS "ResultadoSimulacao";
 
 CREATE TABLE "ResultadoSimulacao" (
   "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  "largura" REAL NULL,
+  "comprimento" REAL NULL,
+  "pessoas" INTEGER NOT NULL,
+  "televisoes" INTEGER NOT NULL,
+  "computadores" INTEGER NOT NULL,
+  "celulares" INTEGER NOT NULL,
+  "solDireto" INTEGER NOT NULL,
   "btu" REAL NULL);
 

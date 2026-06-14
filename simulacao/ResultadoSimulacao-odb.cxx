@@ -72,9 +72,37 @@ namespace odb
     //
     t[0UL] = false;
 
-    // btu
+    // largura
     //
     t[1UL] = false;
+
+    // comprimento
+    //
+    t[2UL] = false;
+
+    // pessoas
+    //
+    t[3UL] = false;
+
+    // televisoes
+    //
+    t[4UL] = false;
+
+    // computadores
+    //
+    t[5UL] = false;
+
+    // celulares
+    //
+    t[6UL] = false;
+
+    // solDireto
+    //
+    t[7UL] = false;
+
+    // btu
+    //
+    t[8UL] = false;
 
     return grew;
   }
@@ -99,6 +127,55 @@ namespace odb
       b[n].is_null = &i.id_null;
       n++;
     }
+
+    // largura
+    //
+    b[n].type = sqlite::bind::real;
+    b[n].buffer = &i.largura_value;
+    b[n].is_null = &i.largura_null;
+    n++;
+
+    // comprimento
+    //
+    b[n].type = sqlite::bind::real;
+    b[n].buffer = &i.comprimento_value;
+    b[n].is_null = &i.comprimento_null;
+    n++;
+
+    // pessoas
+    //
+    b[n].type = sqlite::bind::integer;
+    b[n].buffer = &i.pessoas_value;
+    b[n].is_null = &i.pessoas_null;
+    n++;
+
+    // televisoes
+    //
+    b[n].type = sqlite::bind::integer;
+    b[n].buffer = &i.televisoes_value;
+    b[n].is_null = &i.televisoes_null;
+    n++;
+
+    // computadores
+    //
+    b[n].type = sqlite::bind::integer;
+    b[n].buffer = &i.computadores_value;
+    b[n].is_null = &i.computadores_null;
+    n++;
+
+    // celulares
+    //
+    b[n].type = sqlite::bind::integer;
+    b[n].buffer = &i.celulares_value;
+    b[n].is_null = &i.celulares_null;
+    n++;
+
+    // solDireto
+    //
+    b[n].type = sqlite::bind::integer;
+    b[n].buffer = &i.solDireto_value;
+    b[n].is_null = &i.solDireto_null;
+    n++;
 
     // btu
     //
@@ -147,6 +224,118 @@ namespace odb
       i.id_null = is_null;
     }
 
+    // largura
+    //
+    {
+      double const& v =
+        o.largura;
+
+      bool is_null (true);
+      sqlite::value_traits<
+          double,
+          sqlite::id_real >::set_image (
+        i.largura_value,
+        is_null,
+        v);
+      i.largura_null = is_null;
+    }
+
+    // comprimento
+    //
+    {
+      double const& v =
+        o.comprimento;
+
+      bool is_null (true);
+      sqlite::value_traits<
+          double,
+          sqlite::id_real >::set_image (
+        i.comprimento_value,
+        is_null,
+        v);
+      i.comprimento_null = is_null;
+    }
+
+    // pessoas
+    //
+    {
+      int const& v =
+        o.pessoas;
+
+      bool is_null (false);
+      sqlite::value_traits<
+          int,
+          sqlite::id_integer >::set_image (
+        i.pessoas_value,
+        is_null,
+        v);
+      i.pessoas_null = is_null;
+    }
+
+    // televisoes
+    //
+    {
+      int const& v =
+        o.televisoes;
+
+      bool is_null (false);
+      sqlite::value_traits<
+          int,
+          sqlite::id_integer >::set_image (
+        i.televisoes_value,
+        is_null,
+        v);
+      i.televisoes_null = is_null;
+    }
+
+    // computadores
+    //
+    {
+      int const& v =
+        o.computadores;
+
+      bool is_null (false);
+      sqlite::value_traits<
+          int,
+          sqlite::id_integer >::set_image (
+        i.computadores_value,
+        is_null,
+        v);
+      i.computadores_null = is_null;
+    }
+
+    // celulares
+    //
+    {
+      int const& v =
+        o.celulares;
+
+      bool is_null (false);
+      sqlite::value_traits<
+          int,
+          sqlite::id_integer >::set_image (
+        i.celulares_value,
+        is_null,
+        v);
+      i.celulares_null = is_null;
+    }
+
+    // solDireto
+    //
+    {
+      bool const& v =
+        o.solDireto;
+
+      bool is_null (false);
+      sqlite::value_traits<
+          bool,
+          sqlite::id_integer >::set_image (
+        i.solDireto_value,
+        is_null,
+        v);
+      i.solDireto_null = is_null;
+    }
+
     // btu
     //
     {
@@ -189,6 +378,104 @@ namespace odb
         i.id_null);
     }
 
+    // largura
+    //
+    {
+      double& v =
+        o.largura;
+
+      sqlite::value_traits<
+          double,
+          sqlite::id_real >::set_value (
+        v,
+        i.largura_value,
+        i.largura_null);
+    }
+
+    // comprimento
+    //
+    {
+      double& v =
+        o.comprimento;
+
+      sqlite::value_traits<
+          double,
+          sqlite::id_real >::set_value (
+        v,
+        i.comprimento_value,
+        i.comprimento_null);
+    }
+
+    // pessoas
+    //
+    {
+      int& v =
+        o.pessoas;
+
+      sqlite::value_traits<
+          int,
+          sqlite::id_integer >::set_value (
+        v,
+        i.pessoas_value,
+        i.pessoas_null);
+    }
+
+    // televisoes
+    //
+    {
+      int& v =
+        o.televisoes;
+
+      sqlite::value_traits<
+          int,
+          sqlite::id_integer >::set_value (
+        v,
+        i.televisoes_value,
+        i.televisoes_null);
+    }
+
+    // computadores
+    //
+    {
+      int& v =
+        o.computadores;
+
+      sqlite::value_traits<
+          int,
+          sqlite::id_integer >::set_value (
+        v,
+        i.computadores_value,
+        i.computadores_null);
+    }
+
+    // celulares
+    //
+    {
+      int& v =
+        o.celulares;
+
+      sqlite::value_traits<
+          int,
+          sqlite::id_integer >::set_value (
+        v,
+        i.celulares_value,
+        i.celulares_null);
+    }
+
+    // solDireto
+    //
+    {
+      bool& v =
+        o.solDireto;
+
+      sqlite::value_traits<
+          bool,
+          sqlite::id_integer >::set_value (
+        v,
+        i.solDireto_value,
+        i.solDireto_null);
+    }
+
     // btu
     //
     {
@@ -222,13 +509,27 @@ namespace odb
   const char access::object_traits_impl< ::simulacao::ResultadoSimulacao, id_sqlite >::persist_statement[] =
   "INSERT INTO \"ResultadoSimulacao\" "
   "(\"id\", "
+  "\"largura\", "
+  "\"comprimento\", "
+  "\"pessoas\", "
+  "\"televisoes\", "
+  "\"computadores\", "
+  "\"celulares\", "
+  "\"solDireto\", "
   "\"btu\") "
   "VALUES "
-  "(?, ?)";
+  "(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
   const char access::object_traits_impl< ::simulacao::ResultadoSimulacao, id_sqlite >::find_statement[] =
   "SELECT "
   "\"ResultadoSimulacao\".\"id\", "
+  "\"ResultadoSimulacao\".\"largura\", "
+  "\"ResultadoSimulacao\".\"comprimento\", "
+  "\"ResultadoSimulacao\".\"pessoas\", "
+  "\"ResultadoSimulacao\".\"televisoes\", "
+  "\"ResultadoSimulacao\".\"computadores\", "
+  "\"ResultadoSimulacao\".\"celulares\", "
+  "\"ResultadoSimulacao\".\"solDireto\", "
   "\"ResultadoSimulacao\".\"btu\" "
   "FROM \"ResultadoSimulacao\" "
   "WHERE \"ResultadoSimulacao\".\"id\"=?";
@@ -236,6 +537,13 @@ namespace odb
   const char access::object_traits_impl< ::simulacao::ResultadoSimulacao, id_sqlite >::update_statement[] =
   "UPDATE \"ResultadoSimulacao\" "
   "SET "
+  "\"largura\"=?, "
+  "\"comprimento\"=?, "
+  "\"pessoas\"=?, "
+  "\"televisoes\"=?, "
+  "\"computadores\"=?, "
+  "\"celulares\"=?, "
+  "\"solDireto\"=?, "
   "\"btu\"=? "
   "WHERE \"id\"=?";
 

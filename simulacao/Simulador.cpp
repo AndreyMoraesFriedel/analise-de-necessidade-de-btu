@@ -75,7 +75,16 @@ namespace simulacao {
                 calculos::CalculadoraBTU
                     ::calcular(amb);
 
-            ResultadoSimulacao r(resultado);
+	    ResultadoSimulacao r(
+    		cenario.getLargura(),
+    		cenario.getComprimento(),
+    		cenario.getPessoas(),
+    		cenario.getTelevisoes(),
+    		cenario.getComputadores(),
+                cenario.getCelulares(),
+    		cenario.getSolDireto(),
+    		resultado
+	    );
 
             odb::transaction t(
                 db.begin()
