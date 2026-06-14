@@ -2,6 +2,8 @@
 
 namespace equipamentos {
 
-    Celular::Celular() : AparelhoEletronico(10.0) {}
+    double Celular::getCargaTermica() const {
+        return 100;
+    }
 
 }

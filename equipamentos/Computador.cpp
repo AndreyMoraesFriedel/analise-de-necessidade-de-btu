@@ -2,6 +2,8 @@
 
 namespace equipamentos {
 
-    Computador::Computador() : AparelhoEletronico(300.0) {}
+    double Computador::getCargaTermica() const {
+        return 600;
+    }
 
 }

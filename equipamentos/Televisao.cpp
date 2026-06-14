@@ -2,6 +2,8 @@
 
 namespace equipamentos {
 
-    Televisao::Televisao() : AparelhoEletronico(120.0) {}
+    double Televisao::getCargaTermica() const {
+        return 300;
+    }
 
 }

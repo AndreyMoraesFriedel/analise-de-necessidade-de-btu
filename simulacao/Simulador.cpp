@@ -54,37 +54,20 @@ namespace simulacao {
                 );
             }
             //TVs
-            for (int i = 0;
-                 i < cenario.getTelevisoes();
-                 i++) {
-                auto* tv = new Televisao();
-
-                tv->ligar();
-
-                amb.adicionarAparelho(tv);
-            }
+           for (int i = 0;i < cenario.getTelevisoes();i++) {
+	    	auto* tv = new Televisao();
+	    	amb.adicionarAparelho(tv);
+    	   }
 
             //PCs
-            for (int i = 0;
-                 i < cenario.getComputadores();
-                 i++) {
-
+            for (int i = 0;i < cenario.getComputadores(); i++) {
                 auto* pc = new Computador();
-
-                pc->ligar();
-
                 amb.adicionarAparelho(pc);
             }
 
             //Celulares
-            for (int i = 0;
-                 i < cenario.getCelulares();
-                 i++) {
-
+            for (int i = 0;i < cenario.getCelulares();i++) {
                 auto* cl = new Celular();
-
-                cl->ligar();
-
                 amb.adicionarAparelho(cl);
             }
 

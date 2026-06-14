@@ -6,9 +6,11 @@
 namespace equipamentos {
 
     class Televisao : public AparelhoEletronico {
-        public:
-            Televisao();
+
+    public:
+        double getCargaTermica() const override;
     };
+
 }
 
 #endif

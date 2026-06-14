@@ -7,7 +7,8 @@ namespace equipamentos {
 
     class Celular : public AparelhoEletronico {
         public:
-            Celular();
+       		 double getCargaTermica() const override;
+   
     };
 
 }
