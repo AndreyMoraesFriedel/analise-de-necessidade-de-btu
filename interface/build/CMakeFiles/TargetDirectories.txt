@@ -1,0 +1,5 @@
+/home/folkish/MyProjects/analise-de-necessidade-de-btu/interface/build/CMakeFiles/SimuladorBTUQt.dir
+/home/folkish/MyProjects/analise-de-necessidade-de-btu/interface/build/CMakeFiles/edit_cache.dir
+/home/folkish/MyProjects/analise-de-necessidade-de-btu/interface/build/CMakeFiles/rebuild_cache.dir
+/home/folkish/MyProjects/analise-de-necessidade-de-btu/interface/build/CMakeFiles/SimuladorBTUQt_autogen_timestamp_deps.dir
+/home/folkish/MyProjects/analise-de-necessidade-de-btu/interface/build/CMakeFiles/SimuladorBTUQt_autogen.dir

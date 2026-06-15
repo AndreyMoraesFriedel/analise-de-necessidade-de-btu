@@ -33,10 +33,22 @@ namespace simulacao {
         );
 
         odb::sqlite::database db(
-            "simulador.db",
+            "../../simulador.db",
             SQLITE_OPEN_READWRITE |
             SQLITE_OPEN_CREATE
         );
+
+{
+    odb::transaction t(
+        db.begin()
+    );
+
+    db.execute(
+        "DELETE FROM ResultadoSimulacao"
+    );
+
+    t.commit();
+}	
 
         for (const auto& cenario : cenarios) {
             Ambiente amb(
