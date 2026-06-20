@@ -3,18 +3,16 @@
 
 #include <QMainWindow>
 
-class QTableWidget;
-class GraficoBTU;
+class MapaCalorBTU;
 
 class MainWindow : public QMainWindow {
 
     Q_OBJECT
 
 private:
-    QTableWidget* tabela;
-    GraficoBTU* grafico;
+    MapaCalorBTU* mapaCalor;
+
     bool abrirBanco();
-    void carregarResultados();
 
 public:
     MainWindow();

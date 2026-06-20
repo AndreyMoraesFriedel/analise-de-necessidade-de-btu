@@ -22,7 +22,7 @@ qt_add_executable(
 
     main.cpp
     MainWindow.cpp
-    GraficoBTU.cpp
+    MapaCalorBTU.cpp
 
     ../simulacao/Simulador.cpp
     ../simulacao/CenarioSimulacao.cpp

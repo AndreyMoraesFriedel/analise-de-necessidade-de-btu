@@ -1,32 +1,25 @@
 #include "MainWindow.h"
+#include "MapaCalorBTU.h"
 
 #include <QSqlDatabase>
-#include <QSqlQuery>
 #include <QSqlError>
 
-#include <QTableWidget>
-#include <QTableWidgetItem>
-#include <QHeaderView>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QWidget>
 
 #include <QDebug>
 
-#include "GraficoBTU.h"
-
-#include <QVBoxLayout>
-#include <QWidget>
-
 MainWindow::MainWindow() {
 
-   setWindowTitle(
-        "Simulador BTU"
+    setWindowTitle(
+        "Mapa de Calor - BTU"
     );
 
     resize(
-        1000,
-        700
+        900,
+        600
     );
-
-    tabela = new QTableWidget(this);
 
     QWidget* central =
         new QWidget();
@@ -34,45 +27,41 @@ MainWindow::MainWindow() {
     QVBoxLayout* layout =
         new QVBoxLayout();
 
-    if (abrirBanco()) {
+    QLabel* titulo =
+        new QLabel(
+            "Influência de Pessoas e Computadores no BTU"
+        );
 
-        grafico =
-            new GraficoBTU();
-
-        carregarResultados();
-    }
-
-
-	layout->addWidget(
-	    grafico
-	);
-
-	layout->addWidget(
-	    tabela
-	);
-
-	central->setLayout(
-	    layout
-	);
-
-	setCentralWidget(
-	    central
-	);
-
-    tabela->setColumnCount(2);
-
-    tabela->setHorizontalHeaderLabels(
-        {
-            "ID",
-            "BTU"
-        }
+    titulo->setAlignment(
+        Qt::AlignCenter
     );
 
-    tabela->horizontalHeader()
-          ->setStretchLastSection(true);
-    if (abrirBanco()) { 
-	    carregarResultados(); 
+    titulo->setStyleSheet(
+        "font-size: 20px;"
+        "font-weight: bold;"
+    );
+
+    layout->addWidget(
+        titulo
+    );
+
+    if (abrirBanco()) {
+
+        mapaCalor =
+            new MapaCalorBTU();
+
+        layout->addWidget(
+            mapaCalor
+        );
     }
+
+    central->setLayout(
+        layout
+    );
+
+    setCentralWidget(
+        central
+    );
 }
 
 bool MainWindow::abrirBanco() {
@@ -80,11 +69,16 @@ bool MainWindow::abrirBanco() {
     QSqlDatabase db;
 
     if (QSqlDatabase::contains()) {
-        db = QSqlDatabase::database();
+
+        db =
+            QSqlDatabase::database();
+
     } else {
-        db = QSqlDatabase::addDatabase(
-            "QSQLITE"
-        );
+
+        db =
+            QSqlDatabase::addDatabase(
+                "QSQLITE"
+            );
     }
 
     db.setDatabaseName(
@@ -94,64 +88,10 @@ bool MainWindow::abrirBanco() {
     if (!db.open()) {
 
         qDebug()
-            << "Erro ao abrir banco:"
             << db.lastError().text();
 
         return false;
     }
 
     return true;
-}
-
-void MainWindow::carregarResultados() {
-
-    tabela->setRowCount(0);
-
-    QSqlQuery query;
-
-    bool ok = query.exec(
-        "SELECT id, btu "
-        "FROM ResultadoSimulacao "
-        "ORDER BY id"
-    );
-
-    if (!ok) {
-
-        qDebug()
-            << "Erro SQL:"
-            << query.lastError().text();
-
-        return;
-    }
-
-    int linha = 0;
-
-    while (query.next()) {
-
-        tabela->insertRow(
-            linha
-        );
-
-        tabela->setItem(
-            linha,
-            0,
-            new QTableWidgetItem(
-                query.value(0).toString()
-            )
-        );
-
-        tabela->setItem(
-            linha,
-            1,
-            new QTableWidgetItem(
-                query.value(1).toString()
-            )
-        );
-
-        linha++;
-    }
-
-    qDebug()
-        << "Registros carregados:"
-        << linha;
 }

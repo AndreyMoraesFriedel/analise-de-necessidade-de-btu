@@ -39,3 +39,30 @@
 
 # debug information files
 *.dwo
+
+# CMake
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Qt
+*_autogen/
+.autogen/
+
+# Qt Creator
+*.pro.user
+*.pro.user.*
+
+# SQLite
+*.db
+*.sqlite
+*.sqlite3
+
+# Core dumps
+core
+core.*
+
+# Arquivos temporários
+*~
