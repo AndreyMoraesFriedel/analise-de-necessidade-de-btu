@@ -19,6 +19,7 @@
 #include <odb/transaction.hxx>
 #include <odb/sqlite/database.hxx>
 
+#include <random>
 #include <vector>
 
 using namespace ambiente;
@@ -49,6 +50,13 @@ namespace simulacao {
 
     t.commit();
 }	
+	std::random_device rd;
+
+	std::mt19937 gen(
+    		rd()
+	);
+
+	std::uniform_int_distribution<>dist(1,5);
 
         for (const auto& cenario : cenarios) {
             Ambiente amb(
@@ -56,15 +64,10 @@ namespace simulacao {
                 cenario.getComprimento(),
                 cenario.getSolDireto()
             );
-            //Pessoas
-            for (int i = 0;
-                 i < cenario.getPessoas();
-                 i++) {
-
-                amb.adicionarPessoa(
-                    new Pessoa()
-                );
-            }
+           //Pessoas
+           for (int i = 0;i < cenario.getPessoas();i++){
+		amb.adicionarPessoa(new Pessoa(dist(gen)));
+	   }
             //TVs
            for (int i = 0;i < cenario.getTelevisoes();i++) {
 	    	auto* tv = new Televisao();

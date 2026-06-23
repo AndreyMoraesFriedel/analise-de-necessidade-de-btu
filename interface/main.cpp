@@ -1,15 +1,27 @@
+#include "../entrada/GeradorEntrada.h"
 #include "../simulacao/Simulador.h"
+
 #include <QApplication>
+
 #include "MainWindow.h"
 
-int main(int argc, char* argv[]) {
-    
-    simulacao::Simulador s;
+int main(
+    int argc,
+    char* argv[]
+) {
 
-    s.executar(
+    entrada::GeradorEntrada::gerar(
+        "../../entrada.csv",
+        20,
+        20
+    );
+
+    simulacao::Simulador simulador;
+
+    simulador.executar(
         "../../entrada.csv"
     );
-    
+
     QApplication app(
         argc,
         argv

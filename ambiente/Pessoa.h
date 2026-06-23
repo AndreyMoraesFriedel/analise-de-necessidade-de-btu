@@ -3,11 +3,19 @@
 
 namespace ambiente {
 
-    class Pessoa {
+class Pessoa {
 
-    public:
-        Pessoa();
-    };
+private:
+    int percepcaoCalor;
+
+public:
+
+    Pessoa(
+        int percepcaoCalor = 3
+    );
+
+    int getPercepcaoCalor() const;
+};
 
 }
 

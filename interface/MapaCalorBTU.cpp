@@ -5,8 +5,17 @@
 #include <QHeaderView>
 #include <QTableWidgetItem>
 
-#include <QBrush>
 #include <QColor>
+
+#include <vector>
+#include <set>
+
+struct RegistroBTU {
+
+    int pessoas;
+    int computadores;
+    double btu;
+};
 
 MapaCalorBTU::MapaCalorBTU(
     QWidget* parent
@@ -16,82 +25,172 @@ MapaCalorBTU::MapaCalorBTU(
     carregarDados();
 }
 
+QColor MapaCalorBTU::calcularCor(
+    double valor,
+    double minimo,
+    double maximo
+) {
+
+    if (maximo == minimo) {
+
+        return QColor(
+            255,
+            255,
+            0
+        );
+    }
+
+    double proporcao =
+        (valor - minimo)
+        /
+        (maximo - minimo);
+
+    int vermelho =
+        static_cast<int>(
+            255 * proporcao
+        );
+
+    int verde =
+        static_cast<int>(
+            255 * (1.0 - proporcao)
+        );
+
+    return QColor(
+        vermelho,
+        verde,
+        0
+    );
+}
+
 void MapaCalorBTU::carregarDados() {
 
-    setRowCount(6);
-    setColumnCount(6);
+    std::vector<RegistroBTU> registros;
 
-    setVerticalHeaderLabels(
-        {
-            "1 Pessoa",
-            "3 Pessoas",
-            "5 Pessoas",
-            "7 Pessoas",
-            "9 Pesssoas",
-            "11 Pessoas"
-        }
-    );
+    std::set<int> pessoasSet;
+    std::set<int> computadoresSet;
 
-    setHorizontalHeaderLabels(
-        {
-            "0 Computador",
-            "2 Computadores",
-            "4 Computadores",
-            "6 Computadores",
-            "8 Computadores",
-            "10 Computadores"
-        }
-    );
+    double menorBTU =
+        999999999;
 
-    horizontalHeader()->setSectionResizeMode(
-        QHeaderView::Stretch
-    );
-
-    verticalHeader()->setSectionResizeMode(
-        QHeaderView::Stretch
-    );
+    double maiorBTU =
+        0;
 
     QSqlQuery query;
 
     query.exec(
         "SELECT pessoas, computadores, btu "
-        "FROM ResultadoSimulacao"
+        "FROM ResultadoSimulacao "
+        "ORDER BY pessoas, computadores"
     );
 
     while (query.next()) {
 
-        int pessoas =
+        RegistroBTU r;
+
+        r.pessoas =
             query.value(0).toInt();
 
-        int computadores =
+        r.computadores =
             query.value(1).toInt();
 
-        double btu =
+        r.btu =
             query.value(2).toDouble();
 
-        int linha =
-            (pessoas - 1) / 2;
+        registros.push_back(r);
 
-        int coluna =
-            computadores / 2;
+        pessoasSet.insert(
+            r.pessoas
+        );
+
+        computadoresSet.insert(
+            r.computadores
+        );
+
+        if (r.btu < menorBTU)
+            menorBTU = r.btu;
+
+        if (r.btu > maiorBTU)
+            maiorBTU = r.btu;
+    }
+
+    QStringList linhas;
+    QStringList colunas;
+
+    for (int p : pessoasSet) {
+
+        linhas
+            << QString::number(p);
+    }
+
+    for (int c : computadoresSet) {
+
+        colunas
+            << QString::number(c);
+    }
+
+    setRowCount(
+        linhas.size()
+    );
+
+    setColumnCount(
+        colunas.size()
+    );
+
+    setVerticalHeaderLabels(
+        linhas
+    );
+
+    setHorizontalHeaderLabels(
+        colunas
+    );
+
+    horizontalHeader()
+        ->setSectionResizeMode(
+            QHeaderView::Stretch
+        );
+
+    verticalHeader()
+        ->setSectionResizeMode(
+            QHeaderView::Stretch
+        );
+
+    for (const auto& r : registros) {
+
+        int linha = 0;
+        int coluna = 0;
+
+        for (int p : pessoasSet) {
+
+            if (p == r.pessoas)
+                break;
+
+            linha++;
+        }
+
+        for (int c : computadoresSet) {
+
+            if (c == r.computadores)
+                break;
+
+            coluna++;
+        }
 
         QTableWidgetItem* item =
             new QTableWidgetItem(
-                QString::number(btu)
+                QString::number(
+                    r.btu,
+                    'f',
+                    0
+                )
             );
 
-        QColor cor;
-
-        if (btu < 7000)
-            cor = QColor(0,255,0);          // verde
-        else if (btu < 9000)
-            cor = QColor(255,255,0);        // amarelo
-        else if (btu < 11000)
-            cor = QColor(255,165,0);        // laranja
-        else
-            cor = QColor(255,0,0);          // vermelho
-
-        item->setBackground(cor);
+        item->setBackground(
+            calcularCor(
+                r.btu,
+                menorBTU,
+                maiorBTU
+            )
+        );
 
         setItem(
             linha,

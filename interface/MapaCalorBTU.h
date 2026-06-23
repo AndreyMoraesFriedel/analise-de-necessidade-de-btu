@@ -14,6 +14,12 @@ public:
 private:
 
     void carregarDados();
+
+    QColor calcularCor(
+        double valor,
+        double minimo,
+        double maximo
+    );
 };
 
 #endif

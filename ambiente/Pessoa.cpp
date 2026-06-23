@@ -2,6 +2,15 @@
 
 namespace ambiente {
 
-    Pessoa::Pessoa() {}
+Pessoa::Pessoa(
+    int percepcaoCalor
+) {
+    this->percepcaoCalor =
+        percepcaoCalor;
+}
+
+int Pessoa::getPercepcaoCalor() const {
+    return percepcaoCalor;
+}
 
 }

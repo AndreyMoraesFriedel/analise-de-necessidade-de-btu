@@ -30,6 +30,7 @@ qt_add_executable(
     ../simulacao/ResultadoSimulacao-odb.cxx
 
     ../entrada/LeitorCSV.cpp
+    ../entrada/GeradorEntrada.cpp
 
     ../ambiente/Ambiente.cpp
     ../ambiente/Pessoa.cpp
