@@ -10,11 +10,13 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
 private:
+
     MapaCalorBTU* mapaCalor;
 
     bool abrirBanco();
 
 public:
+
     MainWindow();
 };
 

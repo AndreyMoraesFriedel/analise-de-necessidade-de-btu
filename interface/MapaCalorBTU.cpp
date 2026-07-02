@@ -1,79 +1,116 @@
 #include "MapaCalorBTU.h"
 
 #include <QSqlQuery>
-
 #include <QHeaderView>
 #include <QTableWidgetItem>
-
 #include <QColor>
 
-#include <vector>
 #include <set>
-
-struct RegistroBTU {
-
-    int pessoas;
-    int computadores;
-    double btu;
-};
+#include <algorithm>
 
 MapaCalorBTU::MapaCalorBTU(
     QWidget* parent
 )
     : QTableWidget(parent)
 {
+    menorBTU = 999999999;
+    maiorBTU = 0;
+
+    camadaAtual = 0;
+    etapaAtual = 0;
+
     carregarDados();
+
+    connect(
+        &timer,
+        &QTimer::timeout,
+        this,
+        &MapaCalorBTU::atualizarAnimacao
+    );
+
+    timer.start(200);
 }
 
 QColor MapaCalorBTU::calcularCor(
     double valor,
     double minimo,
     double maximo
-) {
+)
+{
+    if(maximo <= minimo)
+        return QColor(255,255,0);
 
-    if (maximo == minimo) {
+    double t =
+        (valor-minimo)/
+        (maximo-minimo);
 
-        return QColor(
-            255,
-            255,
-            0
-        );
-    }
+    t = std::clamp(
+        t,
+        0.0,
+        1.0
+    );
 
-    double proporcao =
-        (valor - minimo)
-        /
-        (maximo - minimo);
+    auto interpolar =
+        [](QColor a,
+           QColor b,
+           double p)
+        {
+            return QColor(
+                a.red()   + (b.red()   - a.red())   * p,
+                a.green() + (b.green() - a.green()) * p,
+                a.blue()  + (b.blue()  - a.blue())  * p
+            );
+        };
 
-    int vermelho =
-        static_cast<int>(
-            255 * proporcao
-        );
-
-    int verde =
-        static_cast<int>(
-            255 * (1.0 - proporcao)
-        );
-
-    return QColor(
-        vermelho,
-        verde,
+    QColor verde(
+        0,
+        190,
         0
+    );
+
+    QColor amarelo(
+        255,
+        255,
+        0
+    );
+
+    QColor laranja(
+        255,
+        150,
+        0
+    );
+
+    QColor vermelho(
+        220,
+        0,
+        0
+    );
+
+    if(t < 0.33)
+        return interpolar(
+            verde,
+            amarelo,
+            t/0.33
+        );
+
+    if(t < 0.66)
+        return interpolar(
+            amarelo,
+            laranja,
+            (t-0.33)/0.33
+        );
+
+    return interpolar(
+        laranja,
+        vermelho,
+        (t-0.66)/0.34
     );
 }
 
-void MapaCalorBTU::carregarDados() {
-
-    std::vector<RegistroBTU> registros;
-
+void MapaCalorBTU::carregarDados()
+{
     std::set<int> pessoasSet;
     std::set<int> computadoresSet;
-
-    double menorBTU =
-        999999999;
-
-    double maiorBTU =
-        0;
 
     QSqlQuery query;
 
@@ -83,58 +120,69 @@ void MapaCalorBTU::carregarDados() {
         "ORDER BY pessoas, computadores"
     );
 
-    while (query.next()) {
+    while(query.next())
+    {
+        RegistroBTU reg;
 
-        RegistroBTU r;
-
-        r.pessoas =
+        reg.pessoas =
             query.value(0).toInt();
 
-        r.computadores =
+        reg.computadores =
             query.value(1).toInt();
 
-        r.btu =
+        reg.btu =
             query.value(2).toDouble();
 
-        registros.push_back(r);
+        registros.push_back(reg);
 
         pessoasSet.insert(
-            r.pessoas
+            reg.pessoas
         );
 
         computadoresSet.insert(
-            r.computadores
+            reg.computadores
         );
 
-        if (r.btu < menorBTU)
-            menorBTU = r.btu;
+        menorBTU =
+            std::min(
+                menorBTU,
+                reg.btu
+            );
 
-        if (r.btu > maiorBTU)
-            maiorBTU = r.btu;
+        maiorBTU =
+            std::max(
+                maiorBTU,
+                reg.btu
+            );
     }
 
-    QStringList linhas;
-    QStringList colunas;
+    pessoas.assign(
+        pessoasSet.begin(),
+        pessoasSet.end()
+    );
 
-    for (int p : pessoasSet) {
-
-        linhas
-            << QString::number(p);
-    }
-
-    for (int c : computadoresSet) {
-
-        colunas
-            << QString::number(c);
-    }
+    computadores.assign(
+        computadoresSet.begin(),
+        computadoresSet.end()
+    );
 
     setRowCount(
-        linhas.size()
+        pessoas.size()
     );
 
     setColumnCount(
-        colunas.size()
+        computadores.size()
     );
+
+    QStringList linhas;
+
+    for(int p : pessoas)
+        linhas << QString::number(p);
+
+    QStringList colunas;
+
+    for(int c : computadores)
+        colunas << QString::number(c);
 
     setVerticalHeaderLabels(
         linhas
@@ -144,36 +192,110 @@ void MapaCalorBTU::carregarDados() {
         colunas
     );
 
-    horizontalHeader()
-        ->setSectionResizeMode(
-            QHeaderView::Stretch
-        );
+    horizontalHeader()->setDefaultAlignment(
+        Qt::AlignCenter
+    );
 
-    verticalHeader()
-        ->setSectionResizeMode(
-            QHeaderView::Stretch
-        );
+    verticalHeader()->setDefaultAlignment(
+        Qt::AlignCenter
+    );
 
-    for (const auto& r : registros) {
+    horizontalHeader()->setSectionResizeMode(
+        QHeaderView::Stretch
+    );
 
-        int linha = 0;
-        int coluna = 0;
+    verticalHeader()->setSectionResizeMode(
+        QHeaderView::Stretch
+    );
 
-        for (int p : pessoasSet) {
+    horizontalHeader()->setMinimumSectionSize(
+        20
+    );
 
-            if (p == r.pessoas)
-                break;
+    verticalHeader()->setMinimumSectionSize(
+        20
+    );
 
-            linha++;
-        }
+    horizontalHeader()->setFixedHeight(
+        35
+    );
 
-        for (int c : computadoresSet) {
+    verticalHeader()->setDefaultSectionSize(
+        30
+    );
 
-            if (c == r.computadores)
-                break;
+    setSelectionMode(
+        NoSelection
+    );
 
-            coluna++;
-        }
+    setEditTriggers(
+        NoEditTriggers
+    );
+
+    setFocusPolicy(
+        Qt::NoFocus
+    );
+
+    setCornerButtonEnabled(
+        false
+    );
+
+    setShowGrid(
+        true
+    );
+
+    setVerticalScrollBarPolicy(
+        Qt::ScrollBarAlwaysOff
+    );
+
+    setHorizontalScrollBarPolicy(
+        Qt::ScrollBarAlwaysOff
+    );
+
+    setSizePolicy(
+        QSizePolicy::Expanding,
+        QSizePolicy::Expanding
+    );
+}
+
+void MapaCalorBTU::desenharCelula(
+    int linha,
+    int coluna
+)
+{
+    for(const auto& r : registros)
+    {
+        auto itLinha =
+            std::find(
+                pessoas.begin(),
+                pessoas.end(),
+                r.pessoas
+            );
+
+        auto itColuna =
+            std::find(
+                computadores.begin(),
+                computadores.end(),
+                r.computadores
+            );
+
+        if(
+            itLinha==pessoas.end() ||
+            itColuna==computadores.end()
+        )
+            continue;
+
+        int l =
+            itLinha-pessoas.begin();
+
+        int c =
+            itColuna-computadores.begin();
+
+        if(
+            l!=linha ||
+            c!=coluna
+        )
+            continue;
 
         QTableWidgetItem* item =
             new QTableWidgetItem(
@@ -184,6 +306,29 @@ void MapaCalorBTU::carregarDados() {
                 )
             );
 
+        item->setTextAlignment(
+            Qt::AlignCenter
+        );
+
+        QFont fonte =
+            item->font();
+
+        fonte.setBold(
+            true
+        );
+
+        fonte.setPointSize(
+            8
+        );
+
+        item->setFont(
+            fonte
+        );
+
+        item->setFlags(
+            Qt::ItemIsEnabled
+        );
+
         item->setBackground(
             calcularCor(
                 r.btu,
@@ -193,9 +338,69 @@ void MapaCalorBTU::carregarDados() {
         );
 
         setItem(
-            linha,
-            coluna,
+            l,
+            c,
             item
         );
+
+        break;
+    }
+}
+
+void MapaCalorBTU::atualizarAnimacao()
+{
+    int maxLinha =
+        std::min(
+            camadaAtual,
+            (int)pessoas.size()-1
+        );
+
+    int maxColuna =
+        std::min(
+            camadaAtual,
+            (int)computadores.size()-1
+        );
+
+    std::vector<std::pair<int,int>> borda;
+
+    for(int c=0;c<=maxColuna;c++)
+        borda.push_back(
+            {
+                maxLinha,
+                c
+            }
+        );
+
+    for(int l=0;l<maxLinha;l++)
+        borda.push_back(
+            {
+                l,
+                maxColuna
+            }
+        );
+
+    if(etapaAtual < (int)borda.size())
+    {
+        desenharCelula(
+            borda[etapaAtual].first,
+            borda[etapaAtual].second
+        );
+
+        etapaAtual++;
+        return;
+    }
+
+    camadaAtual++;
+    etapaAtual = 0;
+
+    if(
+        camadaAtual >=
+        std::max(
+            pessoas.size(),
+            computadores.size()
+        )
+    )
+    {
+        timer.stop();
     }
 }

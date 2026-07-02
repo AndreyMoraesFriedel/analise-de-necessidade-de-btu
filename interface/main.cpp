@@ -12,8 +12,8 @@ int main(
 
     entrada::GeradorEntrada::gerar(
         "../../entrada.csv",
-        20,
-        20
+        25,
+        25
     );
 
     simulacao::Simulador simulador;
@@ -29,7 +29,7 @@ int main(
 
     MainWindow janela;
 
-    janela.show();
+    janela.showMaximized();
 
     return app.exec();
 }

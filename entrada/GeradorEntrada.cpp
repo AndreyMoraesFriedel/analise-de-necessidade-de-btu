@@ -14,28 +14,33 @@ void GeradorEntrada::gerar(
         arquivo
     );
 
-    out <<
-    "largura;comprimento;"
-    "pessoas;tvs;"
-    "computadores;"
-    "celulares;"
-    "solDireto\n";
+    out
+        << "largura;comprimento;"
+        << "pessoas;"
+        << "tvs;"
+        << "computadores;"
+        << "celulares;"
+        << "solDireto\n";
 
-    for (int pessoas = 1;
-         pessoas <= maxPessoas;
-         pessoas++) {
+    for (
+        int pessoas = 1;
+        pessoas <= maxPessoas;
+        pessoas++
+    ) {
 
-        for (int pcs = 0;
-             pcs <= maxComputadores;
-             pcs++) {
+        for (
+            int pcs = 1;
+            pcs <= maxComputadores;
+            pcs++
+        ) {
 
             out
-            << "5;5;"
-            << pessoas << ";"
-            << "0;"
-            << pcs << ";"
-            << "0;"
-            << "0\n";
+                << "5;5;"
+                << pessoas << ";"
+                << "0;"
+                << pcs << ";"
+                << "0;"
+                << "0\n";
         }
     }
 }
